@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="shell-type" content="web_dashboard" />
+  <title>ESTÜ 2050 • İki Eylül Kampüsü Sürdürülebilirlik &amp; İklim Dirençliliği Simülatörü</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+<div class="min-h-screen flex flex-col w-full">
+
+  <!-- TOP NAVIGATION BAR (FULL WIDTH, NO LEFT SIDEBAR) -->
+  <header class="sticky top-0 w-full h-16 bg-white/95 border-b border-gray-200 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-4 lg:gap-6">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-primary text-white flex items-center justify-center shadow-sm">
+          <span class="icon-svg text-lg" data-icon="hub"></span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1 leading-none">
+            <span class="font-headline-md text-lg tracking-tight font-bold text-primary">ESTÜ</span>
+            <span class="font-headline-md text-lg tracking-tight font-bold text-secondary">2050</span>
+            <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary uppercase">v4.2 PRO</span>
+          </div>
+          <span class="text-[11px] text-gray-500 font-medium">Karar Destek Sistemi • İki Eylül Kampüsü</span>
+        </div>
+      </div>
+      <div class="h-6 w-px bg-gray-200 hidden md:block"></div>
+      <nav class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-gray-600" id="top-nav">
+        <a class="nav-tab px-3 py-1.5 rounded-md bg-gray-100 text-primary font-semibold flex items-center gap-1.5" data-target="kpi" href="#kpi">
+          <span class="icon-svg text-[16px]" data-icon="dashboard"></span>
+          <span>Genel Bakış &amp; Telemetri</span>
+        </a>
+        <a class="nav-tab px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1.5" data-target="ctl" href="#ctl">
+          <span class="icon-svg text-[16px]" data-icon="schema"></span>
+          <span>Sürdürülebilirlik Senaryoları</span>
+        </a>
+        <a class="nav-tab px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1.5" data-target="c1" href="#c1">
+          <span class="icon-svg text-[16px]" data-icon="bolt"></span>
+          <span>Enerji &amp; Karbon Bütçesi</span>
+        </a>
+        <a class="nav-tab px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1.5" data-target="resilience-sec" href="#resilience-sec">
+          <span class="icon-svg text-[16px]" data-icon="water_drop"></span>
+          <span>Su &amp; Ekolojik Direnç</span>
+        </a>
+        <a class="nav-tab px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1.5" data-target="c3" href="#c3">
+          <span class="icon-svg text-[16px]" data-icon="query_stats"></span>
+          <span>Yatırım &amp; Politika Analizi</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <div class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-lg bg-gray-100 text-[12px] text-gray-700">
+        <span class="text-gray-500">Hedef Ufku:</span>
+        <div class="inline-flex rounded bg-white p-0.5 border border-gray-200" id="horizon-group">
+          <button class="horizon-btn px-2 py-0.5 rounded text-[11px] font-bold bg-primary text-white cursor-pointer" data-horizon="2030" type="button">2030</button>
+          <button class="horizon-btn px-2 py-0.5 rounded text-[11px] font-medium text-gray-600 cursor-pointer" data-horizon="2040" type="button">2040</button>
+          <button class="horizon-btn px-2 py-0.5 rounded text-[11px] font-medium text-gray-600 cursor-pointer" data-horizon="2050" type="button">2050</button>
+        </div>
+      </div>
+
+      <!-- Koyu / Açık Tema Düğmesi -->
+      <button id="btn-theme" type="button" aria-label="Temayı Değiştir" class="px-2.5 py-1.5 rounded-lg bg-gray-100 border border-gray-200 text-xs font-semibold text-gray-700 flex items-center gap-1.5 cursor-pointer transition-colors">
+        <span class="icon-svg text-[15px]" id="theme-icon" data-icon="dark_mode"></span>
+        <span class="hidden sm:inline" id="theme-label">Koyu Tema</span>
+      </button>
+
+      <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+        <span class="hidden sm:inline">Açık Erişim Karar Portalı •</span> ÇEV515
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full flex-1 px-4 sm:px-6 lg:px-8 py-5 max-w-[1780px] mx-auto flex flex-col gap-5">
+
+    <!-- PAGE HEADER & TITLE BAR -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 lg:p-5 rounded-xl border border-gray-200 shadow-sm">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-1.5 text-gray-500 text-[11px] font-semibold uppercase tracking-wider flex-wrap">
+          <span>ESTÜ Karar Destek Çekirdeği</span>
+          <span class="icon-svg text-[13px]" data-icon="chevron_right"></span>
+          <span>İki Eylül Yerleşkesi</span>
+          <span class="icon-svg text-[13px]" data-icon="chevron_right"></span>
+          <span class="text-primary font-bold">ÇEV515 Endüstri Müh. Ekip B</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-bold font-headline-lg text-gray-900 tracking-tight flex items-center gap-2 flex-wrap">
+          <span>İki Eylül Kampüsü Sürdürülebilirlik &amp; İklim Dirençliliği Simülatörü</span>
+          <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Stokastik Çekirdek Aktif</span>
+        </h1>
+      </div>
+      <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-xs text-gray-700">
+          <span class="icon-svg text-[16px] text-secondary" data-icon="tune"></span>
+          <span class="font-medium" id="active-scenario-badge">Referans Senaryo S-3 (Dirençli Kampüs)</span>
+        </div>
+        <div class="flex items-center gap-1 text-xs text-gray-500 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg">
+          <span class="icon-svg text-[15px] text-primary" data-icon="verified"></span>
+          <span>Jüri Doğrulama v4.2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ÜST PARAMETRE KONTROL KONSOLU (#ctl) -->
+    <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 lg:p-5 flex flex-col gap-4" id="ctl">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-gray-100">
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center">
+            <span class="icon-svg text-[18px]" data-icon="tune"></span>
+          </div>
+          <span class="font-headline-md text-base font-bold text-gray-900">Merkezi Parametre Kontrol Konsolu</span>
+          <span class="text-xs text-gray-400 font-normal ml-1">Anlık Dinamik Simülasyon Girdileri</span>
+        </div>
+        <!-- Senaryo Önayarları (A, B, C) -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-gray-100 p-1 rounded-lg" id="pre">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 px-2">Önayar:</span>
+          <button class="scenario-btn px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-white text-gray-700 shadow-sm cursor-pointer" data-preset="A" type="button">
+            <strong>A •</strong> Mevcut Durum (2024)
+          </button>
+          <button class="scenario-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-primary text-white shadow-sm cursor-pointer" data-preset="B" type="button">
+            <strong>B •</strong> Kademeli Müdahale (2–5 Yıl)
+          </button>
+          <button class="scenario-btn px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-white text-gray-700 shadow-sm cursor-pointer" data-preset="C" type="button">
+            <strong>C •</strong> Tam Dönüşüm &amp; Net-Zero
+          </button>
+        </div>
+      </div>
+
+      <!-- Kontrol Grid'i: Kaydırıcılar, Politikalar ve Sağda Büyük Çalıştır Butonu -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-center">
+        <!-- Sliders: 6 Kompakt Parametre (xl:col-span-8) -->
+        <div class="xl:col-span-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <!-- Param 1: GES Çatı Payı -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-ges" class="font-medium text-gray-700 truncate">GES Çatı Payı</label>
+              <span class="font-bold text-amber-700 text-[11px]" id="val-ges">65%</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-ges" max="100" min="0" step="1" type="range" value="65" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>%0</span><span>%100</span>
+            </div>
+          </div>
+
+          <!-- Param 2: Sarnıç Hacmi -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-cistern" class="font-medium text-gray-700 truncate">Sarnıç Hacmi</label>
+              <span class="font-bold text-secondary text-[11px]" id="val-cistern">3.500 m³</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-cistern" max="6000" min="0" step="100" type="range" value="3500" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>0</span><span>6.000 m³</span>
+            </div>
+          </div>
+
+          <!-- Param 3: BESS Batarya -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-battery" class="font-medium text-gray-700 truncate">BESS Batarya</label>
+              <span class="font-bold text-primary text-[11px]" id="val-battery">4.2 MWh</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-battery" max="10" min="0" step="0.2" type="range" value="4.2" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>0</span><span>10 MWh</span>
+            </div>
+          </div>
+
+          <!-- Param 4: Eşdeğer Nüfus -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-pop" class="font-medium text-gray-700 truncate">Eşdeğer Nüfus</label>
+              <span class="font-bold text-gray-800 text-[11px]" id="val-pop">14.500</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-pop" max="20000" min="10000" step="500" type="range" value="14500" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>10k</span><span>20k</span>
+            </div>
+          </div>
+
+          <!-- Param 5: Çatı Alanı -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-roof" class="font-medium text-gray-700 truncate">Çatı Alanı</label>
+              <span class="font-bold text-gray-800 text-[11px]" id="val-roof">82.000 m²</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-roof" max="100000" min="60000" step="2000" type="range" value="82000" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>60k</span><span>100k m²</span>
+            </div>
+          </div>
+
+          <!-- Param 6: Elektrik Fiyatı -->
+          <div class="p-2.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <label for="sl-tariff" class="font-medium text-gray-700 truncate">Elektrik Fiyatı</label>
+              <span class="font-bold text-gray-800 text-[11px]" id="val-tariff">0.14 $/kWh</span>
+            </div>
+            <input class="w-full cursor-pointer" id="sl-tariff" max="0.25" min="0.08" step="0.01" type="range" value="0.14" />
+            <div class="flex justify-between text-[9px] text-gray-400 mt-1">
+              <span>$0.08</span><span>$0.25</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toggles & Action Button (xl:col-span-4) -->
+        <div class="xl:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <!-- 3 Politika Anahtarı -->
+          <div class="flex flex-col gap-1.5 flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200/80">
+            <label class="flex items-center justify-between text-[11px] font-medium text-gray-700 cursor-pointer">
+              <span class="truncate">Rezervuarda Yağmur/Gri Su</span>
+              <input checked id="chk-grey" class="w-3.5 h-3.5 rounded" type="checkbox" />
+            </label>
+            <label class="flex items-center justify-between text-[11px] font-medium text-gray-700 cursor-pointer">
+              <span class="truncate">Yemekhane Biyo-Kompost</span>
+              <input checked id="chk-compost" class="w-3.5 h-3.5 rounded" type="checkbox" />
+            </label>
+            <label class="flex items-center justify-between text-[11px] font-medium text-gray-700 cursor-pointer">
+              <span class="truncate">ESCO / EPS Finansmanı</span>
+              <input id="chk-esco" class="w-3.5 h-3.5 rounded" type="checkbox" />
+            </label>
+          </div>
+
+          <!-- BELİRGİN & CANLI SİMÜLE ET BUTONU (#1F7A5A) -->
+          <button class="shrink-0 px-4 py-3 sm:py-3.5 rounded-xl bg-[#1F7A5A] text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer" id="btn-run" type="button">
+            <span class="icon-svg text-[20px]" data-icon="play_circle"></span>
+            <div class="flex flex-col text-left leading-tight">
+              <span class="font-bold">Modeli Yeniden Çalıştır</span>
+              <span class="text-[10px] text-emerald-100 font-normal">5.000 Monte Carlo İterasyonu</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. KPI GÖSTERGE ŞERİDİ (11 KART) -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3" id="kpi">
+      <!-- KPI 1: GES Kurulu Güç (kwp) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">GES Kurulu Güç</span>
+          <span class="icon-svg text-amber-600 text-[18px]" data-icon="solar_power"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <div>
+            <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-kwp">8.420</span>
+            <span class="text-xs text-gray-500 ml-0.5">kWp</span>
+          </div>
+          <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded" id="kpi-ges-badge">%65 Çatı</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-amber-500 h-full rounded-full transition-all" id="bar-kwp" style="width: 65%;"></div>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1.5" id="sub-kwp">53.300 m² aktif panel alanı</span>
+      </div>
+
+      <!-- KPI 2: Elektrik Karşılama (cov & prod) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Elektrik Karşılama</span>
+          <span class="icon-svg text-primary text-[18px]" data-icon="bolt"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-primary" id="kpi-cov">%73.8</span>
+          <span class="text-[10px] font-semibold text-emerald-700 flex items-center gap-0.5" id="kpi-cov-delta">
+            <span class="icon-svg text-[12px]" data-icon="trending_up"></span>+38.4%
+          </span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full transition-all" id="bar-cov" style="width: 73.8%;"></div>
+        </div>
+        <span class="text-[11px] text-primary font-medium mt-1.5" id="sub-prod">Yıllık 11.240 MWh üretim</span>
+      </div>
+
+      <!-- KPI 3: Öz-Tüketim Oranı (self, S, X) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Öz-Tüketim Oranı</span>
+          <span class="icon-svg text-secondary text-[18px]" data-icon="sync_alt"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-self">%91.2</span>
+          <span class="text-[10px] text-gray-500" id="kpi-export">İhracat: %8.8</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden flex">
+          <div class="bg-secondary h-full transition-all" id="bar-self" style="width: 91.2%;"></div>
+          <div class="bg-amber-400 h-full transition-all" id="bar-exp" style="width: 8.8%;"></div>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1.5" id="sub-self">Öz: 10.251 MWh • İhraç: 989 MWh</span>
+      </div>
+
+      <!-- KPI 4: Yağmur Hasadı Payı (wCov) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Yağmur Hasadı Payı</span>
+          <span class="icon-svg text-secondary text-[18px]" data-icon="water_drop"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-secondary" id="kpi-wcov">%46.5</span>
+          <span class="text-[10px] text-secondary font-semibold bg-sky-50 px-1.5 py-0.5 rounded">Geri Kazanım</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-secondary h-full rounded-full transition-all" id="bar-wcov" style="width: 46.5%;"></div>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1.5" id="sub-wcov">3.500 m³ sarnıç depolama</span>
+      </div>
+
+      <!-- KPI 5: Su Otonomisi (autoW) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Su Otonomisi</span>
+          <span class="icon-svg text-secondary text-[18px]" data-icon="waves"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <div>
+            <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-autow">42</span>
+            <span class="text-xs text-gray-500 ml-0.5">gün</span>
+          </div>
+          <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded" id="badge-autow">Hedef: &gt;30g</span>
+        </div>
+        <div class="h-3 w-full">
+          <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 12">
+            <polyline id="spark-autow" fill="none" points="0,10 20,8 40,3 60,6 80,2 100,4" stroke="#0284c7" stroke-linecap="round" stroke-width="2"></polyline>
+          </svg>
+        </div>
+        <span class="text-[11px] text-primary font-medium mt-1" id="sub-autow">Yüksek kuraklık direnci</span>
+      </div>
+
+      <!-- KPI 6: Elektrik Otonomisi (autoE) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Elektrik Otonomisi</span>
+          <span class="icon-svg text-amber-600 text-[18px]" data-icon="battery_charging_full"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <div>
+            <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-autoe">18.5</span>
+            <span class="text-xs text-gray-500 ml-0.5">saat</span>
+          </div>
+          <span class="text-[10px] font-medium text-gray-600" id="badge-autoe">4.2 MWh BESS</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-amber-500 h-full rounded-full transition-all" id="bar-autoe" style="width: 77%;"></div>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1.5">Kritik hatlar &amp; ada modu</span>
+      </div>
+
+      <!-- KPI 7: İlk Yatırım CAPEX (capex) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">İlk Yatırım (CAPEX)</span>
+          <span class="icon-svg text-gray-500 text-[18px]" data-icon="account_balance_wallet"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-capex">$4.85M</span>
+          <span class="text-[10px] text-gray-500" id="badge-capex">Altyapı + GES</span>
+        </div>
+        <div class="h-3 w-full">
+          <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 12">
+            <polyline fill="none" points="0,2 25,5 50,7 75,9 100,11" stroke="#64748b" stroke-linecap="round" stroke-width="2"></polyline>
+          </svg>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1" id="sub-capex">Sermaye maliyeti amortismanı</span>
+      </div>
+
+      <!-- KPI 8: Net Bugünkü Değer (npv) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Net Bugünkü Değer (NPV)</span>
+          <span class="icon-svg text-primary text-[18px]" data-icon="payments"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-primary" id="kpi-npv">+$2.14M</span>
+          <span class="text-[10px] font-semibold text-primary bg-emerald-50 px-1.5 py-0.5 rounded">r = %8</span>
+        </div>
+        <div class="h-3 w-full">
+          <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 12">
+            <polyline id="spark-npv" fill="none" points="0,11 20,9 45,7 70,3 100,1" stroke="#1F7A5A" stroke-linecap="round" stroke-width="2"></polyline>
+          </svg>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1">25 yıllık net iskonto kazancı</span>
+      </div>
+
+      <!-- KPI 9: Geri Ödeme Süresi (pb) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Geri Ödeme Süresi</span>
+          <span class="icon-svg text-gray-500 text-[18px]" data-icon="timelapse"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <div>
+            <span class="font-data-metric text-2xl font-bold text-gray-900" id="kpi-pb">6.8</span>
+            <span class="text-xs text-gray-500 ml-0.5">yıl</span>
+          </div>
+          <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded" id="badge-irr">IRR: %14.6</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full transition-all" id="bar-pb" style="width: 27%;"></div>
+        </div>
+        <span class="text-[11px] text-gray-500 mt-1.5" id="sub-pb">MC Medyan (pb50): 6.8 yıl</span>
+      </div>
+
+      <!-- KPI 10: P(NPV > 0) Güvenilirlik (pPos) -->
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">P(NPV &gt; 0) Güvenilirlik</span>
+          <span class="icon-svg text-primary text-[18px]" data-icon="query_stats"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between">
+          <span class="font-data-metric text-2xl font-bold text-primary" id="kpi-ppos">%94.2</span>
+          <span class="text-[10px] text-gray-500">Monte Carlo</span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full transition-all" id="bar-ppos" style="width: 94.2%;"></div>
+        </div>
+        <span class="text-[11px] text-primary font-medium mt-1.5" id="sub-ppos">Düşük risk marjı (%5.8)</span>
+      </div>
+
+      <!-- KPI 11: Yıllık Karbon Azaltımı (co2) (2 Sütun Kaplar) -->
+      <div class="col-span-2 p-3.5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-gray-500">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Yıllık Karbon Azaltımı &amp; Ekolojik Etki</span>
+          <span class="icon-svg text-primary text-[18px]" data-icon="eco"></span>
+        </div>
+        <div class="my-1.5 flex items-baseline justify-between flex-wrap gap-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="font-data-metric text-2xl font-bold text-primary" id="kpi-co2">4.180</span>
+            <span class="text-xs font-semibold text-gray-600">tCO₂ / yıl</span>
+          </div>
+          <span class="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" id="badge-trees">
+            7.800 Ağaç / Yıl Eşdeğeri
+          </span>
+        </div>
+        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full transition-all" id="bar-co2" style="width: 88.4%;"></div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 mt-1.5">
+          <span>Net-Sıfır 2050 ESTÜ Uyumlu</span>
+          <span class="text-primary font-semibold" id="sub-co2">Hedef Ulaşımı: %88.4</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. GÖRSEL ANALİTİK GRAFİK MATRİSİ (6 ADET BAĞIMLILIKSIZ SVG ANALİTİK GRAFİK) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+
+      <!-- GRAFİK 1: GES Üretimi vs Elektrik Talebi (mp vs md) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c1">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Enerji Dengesi</span>
+            <h3 class="text-sm font-bold text-gray-900">Aylık GES Üretimi vs. Elektrik Talebi (MWh)</h3>
+          </div>
+          <div class="flex items-center gap-2.5 text-[11px] shrink-0">
+            <div class="flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded bg-amber-400"></span>
+              <span class="text-gray-600">GES Üretim</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded bg-sky-600"></span>
+              <span class="text-gray-600">Talep</span>
+            </div>
+          </div>
+        </div>
+        <div class="h-56 w-full relative pt-3">
+          <svg id="svg-c1" class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 500 200"></svg>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span id="c1-foot-left">Yıllık Üretim: <strong>11.240 MWh</strong></span>
+          <span class="text-emerald-700 font-semibold" id="c1-foot-right">Temmuz Zirvesi: +480 MWh Şebekeye İade</span>
+        </div>
+      </div>
+
+      <!-- GRAFİK 2: Sarnıç Depolama & Güvenlik Tamponu (tl & over) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c2">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Hidrolojik Rezerv</span>
+            <h3 class="text-sm font-bold text-gray-900">Sarnıç Depolama &amp; Güvenlik Tamponu (m³)</h3>
+          </div>
+          <div class="flex items-center gap-2.5 text-[11px] shrink-0">
+            <div class="flex items-center gap-1">
+              <span class="w-2.5 h-1.5 bg-sky-600 rounded"></span>
+              <span class="text-gray-600">Rezerv</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="w-2.5 h-0.5 border-t border-dashed border-red-500"></span>
+              <span class="text-red-600 font-medium">1.200 m³ Eşik</span>
+            </div>
+          </div>
+        </div>
+        <div class="h-56 w-full relative pt-3">
+          <svg id="svg-c2" class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 500 200"></svg>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span id="c2-foot-left">Kurak Sezon Dayanımı: <strong>42 Gün</strong></span>
+          <span class="text-primary font-semibold" id="c2-foot-right">Maks Doluluk: %94.8</span>
+        </div>
+      </div>
+
+      <!-- GRAFİK 3: Kümülatif Nakit Akışı & Başabaş (cf, pb, npv) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c3">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Mali Fizibilite</span>
+            <h3 class="text-sm font-bold text-gray-900">Kümülatif Nakit Akışı &amp; Başabaş (0–25 Yıl)</h3>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[11px] font-bold shrink-0" id="c3-badge">Geri Ödeme: 6.8 Yıl</span>
+        </div>
+        <div class="h-56 w-full relative pt-3">
+          <svg id="svg-c3" class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 500 200"></svg>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span id="c3-foot-left">İç Verim Oranı (IRR): <strong>%14.6</strong></span>
+          <span class="text-primary font-semibold" id="c3-foot-right">Tasarruf: $840k/yıl</span>
+        </div>
+      </div>
+
+      <!-- GRAFİK 4: Monte Carlo NPV Dağılımı Histogramı (mc: a, p10, p50, p90, pPos, pb50) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c4">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Olasılıksal Risk</span>
+            <h3 class="text-sm font-bold text-gray-900">Monte Carlo NPV Dağılımı (5.000 İterasyon)</h3>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[11px] font-bold shrink-0" id="c4-badge">P(NPV &gt; 0) = %94.2</span>
+        </div>
+        <div class="h-56 w-full relative pt-3">
+          <svg id="svg-c4" class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 500 200"></svg>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span class="text-red-600 font-medium" id="c4-foot-left">Negatif Risk: %5.8</span>
+          <span id="c4-foot-right">P10: <strong>$1.1M</strong> • P50: <strong>$2.1M</strong> • P90: <strong>$3.2M</strong></span>
+        </div>
+      </div>
+
+      <!-- GRAFİK 5: Aylık Su & Karbon Denge Akışı (Waterfall Dağılımı) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c5">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Kaynak &amp; Emisyon Ayrımı</span>
+            <h3 class="text-sm font-bold text-gray-900">Aylık Su &amp; Karbon Denge Akışı</h3>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-800 text-[11px] font-bold shrink-0">Kapalı Döngü</span>
+        </div>
+        <div class="h-56 w-full relative pt-2 flex flex-col justify-center gap-2.5">
+          <!-- Akış Bileşeni 1: Şebeke Suyu Girişi -->
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-[11px] text-gray-700 font-medium">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-sky-600"></span>Belediye Şebeke Suyu</span>
+              <span class="font-bold text-gray-900" id="c5-val-grid">420.000 m³ (%53.5)</span>
+            </div>
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+              <div class="bg-sky-600 h-full rounded-full transition-all" id="c5-bar-grid" style="width: 53.5%;"></div>
+            </div>
+          </div>
+          <!-- Akış Bileşeni 2: Yağmur Hasadı & Sarnıç -->
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-[11px] text-gray-700 font-medium">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-sky-400"></span>Çatı Yağmur Hasadı</span>
+              <span class="font-bold text-sky-700" id="c5-val-rain">180.000 m³ (%22.9)</span>
+            </div>
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+              <div class="bg-sky-400 h-full rounded-full transition-all" id="c5-bar-rain" style="width: 46.5%;"></div>
+            </div>
+          </div>
+          <!-- Akış Bileşeni 3: Geri Kazanılmış Gri Su (Rezervuarlar) -->
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-[11px] text-gray-700 font-medium">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-emerald-600"></span>Rezervuar Gri Su Döngüsü</span>
+              <span class="font-bold text-emerald-800" id="c5-val-grey">185.000 m³ (Tasarruf)</span>
+            </div>
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+              <div class="bg-emerald-600 h-full rounded-full transition-all" id="c5-bar-grey" style="width: 28%;"></div>
+            </div>
+          </div>
+          <!-- Akış Bileşeni 4: Net Karbon Dengesi (Waterfall Çubuğu) -->
+          <div class="flex flex-col gap-1 pt-1 border-t border-gray-100">
+            <div class="flex justify-between text-[11px] text-gray-700 font-medium">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-emerald-500"></span>GES + Kompost Karbon Ofseti</span>
+              <span class="font-bold text-emerald-700" id="c5-val-co2">-4.180 tCO₂</span>
+            </div>
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden flex">
+              <div class="bg-emerald-500 h-full transition-all" id="c5-bar-co2a" style="width: 72%;"></div>
+              <div class="bg-amber-400 h-full transition-all" id="c5-bar-co2b" style="width: 28%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span id="c5-foot-left">Yıllık Su Tasarrufu: <strong>$210.000</strong></span>
+          <span class="text-primary font-semibold" id="c5-foot-right">Net-Zero İlerlemesi: %88.4</span>
+        </div>
+      </div>
+
+      <!-- GRAFİK 6: Sektörel Enerji Tüketim Payı (Donut Grafik) -->
+      <div class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between" id="c6">
+        <div class="flex items-start justify-between pb-2 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Mekânsal Yük Ayrımı</span>
+            <h3 class="text-sm font-bold text-gray-900">Sektörel Enerji Tüketim Dağılımı</h3>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-[11px] font-semibold shrink-0" id="c6-badge">15.229 MWh/yıl</span>
+        </div>
+        <div class="h-56 w-full flex items-center justify-center gap-4">
+          <!-- SVG Donut Grafik -->
+          <div class="relative w-36 h-36 shrink-0">
+            <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36" id="svg-c6">
+              <path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="5"></path>
+              <path id="donut-hvac" class="text-sky-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="42, 100" stroke-width="5"></path>
+              <path id="donut-lab" class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="28, 100" stroke-dashoffset="-42" stroke-width="5"></path>
+              <path id="donut-light" class="text-amber-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="18, 100" stroke-dashoffset="-70" stroke-width="5"></path>
+              <path id="donut-pump" style="color:#a855f7" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="12, 100" stroke-dashoffset="-88" stroke-width="5"></path>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span class="text-xs text-gray-400 font-medium">GES Payı</span>
+              <span class="text-base font-bold text-gray-900 leading-none" id="c6-center-val">%73.8</span>
+            </div>
+          </div>
+          <!-- Açıklama Listesi -->
+          <div class="flex flex-col gap-2 text-xs">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded bg-sky-600"></span>
+                <span class="text-gray-600">HVAC &amp; İklimlendirme</span>
+              </div>
+              <span class="font-bold text-gray-900" id="c6-lbl-hvac">%42</span>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded bg-primary"></span>
+                <span class="text-gray-600">Ar-Ge Laboratuvarları</span>
+              </div>
+              <span class="font-bold text-gray-900" id="c6-lbl-lab">%28</span>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded bg-amber-500"></span>
+                <span class="text-gray-600">Kampüs Aydınlatma</span>
+              </div>
+              <span class="font-bold text-gray-900" id="c6-lbl-light">%18</span>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded bg-purple-500"></span>
+                <span class="text-gray-600">Su &amp; Hidrofor Pompalama</span>
+              </div>
+              <span class="font-bold text-gray-900" id="c6-lbl-pump">%12</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+          <span id="c6-foot-left">GES Karşılama Oranı: <strong>%73.8</strong></span>
+          <span class="text-primary font-semibold" id="c6-foot-right">Pik Talep: 4.8 MW</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 5. DİRENÇLİLİK SKORLARI (autoW, autoE, over, tl türevli) & FMEA RİSK MATRİSİ -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-4" id="resilience-sec">
+      <!-- 3 Dirençlilik Kapasite Skoru (Halka Grafikler) (lg:col-span-4) -->
+      <div class="lg:col-span-4 p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="icon-svg text-primary text-[22px]" data-icon="shield"></span>
+            <h3 class="font-headline-md text-base font-bold text-gray-900">3 Kapasite Dirençlilik Skoru</h3>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">autoW, autoE, over ve tl çıktılarından anlık türetilen şok dayanıklılık modeli</p>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <!-- Ring 1: Emilim Kapasitesi (sarnıç / pik yağış & over) -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+            <div class="relative w-12 h-12 shrink-0">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                <path id="res-abs-ring" class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="82, 100" stroke-linecap="round" stroke-width="3.5"></path>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-primary" id="res-abs-val">%82</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Emilim Kapasitesi (Absorptive)</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5" id="res-abs-desc">Sarnıç / pik yağış sönümleme bariyeri (Taşkın aşımı: 1.420 m³).</p>
+            </div>
+          </div>
+
+          <!-- Ring 2: Toparlanma Kapasitesi (autoW & autoE otonomi süresi) -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+            <div class="relative w-12 h-12 shrink-0">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                <path id="res-rest-ring" class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="76, 100" stroke-linecap="round" stroke-width="3.5"></path>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-secondary" id="res-rest-val">%76</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Toparlanma Kapasitesi (Restorative)</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5" id="res-rest-desc">Otonomi süresi: 42 gün su ve 18.5 saat ada modu elektrik yedeği.</p>
+            </div>
+          </div>
+
+          <!-- Ring 3: Uyum Kapasitesi (yeşil alan / kompost / gri su açık mı) -->
+          <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+            <div class="relative w-12 h-12 shrink-0">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <path class="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                <path id="res-adap-ring" class="text-amber-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="69, 100" stroke-linecap="round" stroke-width="3.5"></path>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-amber-700" id="res-adap-val">%69</span>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-gray-900">Uyum Kapasitesi (Adaptive)</h4>
+              <p class="text-[11px] text-gray-500 mt-0.5" id="res-adap-desc">Yeşil koridor, biyo-kompost (Açık) ve gri su döngüsü (Açık) esnekliği.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+          <span class="font-semibold text-emerald-900">Bileşik İklim Dayanıklılık İndeksi:</span>
+          <span class="text-base font-bold text-primary" id="res-total-idx">75.7 / 100</span>
+        </div>
+      </div>
+
+      <!-- FMEA Risk Matrisi Tablosu (lg:col-span-8) -->
+      <div class="lg:col-span-8 p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col justify-between gap-3 overflow-x-auto">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Önceliklendirme Matrisi</span>
+            <h3 class="text-sm font-bold text-gray-900">Kampüs Öncelikli İklim &amp; Altyapı Risk Matrisi (FMEA)</h3>
+          </div>
+          <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200 shrink-0">5 Kritik Tehlike</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] border-b border-gray-200">
+                <th class="py-2 px-3">Tehlike Modeli</th>
+                <th class="py-2 px-3">Olasılık (O)</th>
+                <th class="py-2 px-3">Şiddet (S)</th>
+                <th class="py-2 px-3">Risk Düzeyi</th>
+                <th class="py-2 px-3">Hafifletme / Tedbir</th>
+                <th class="py-2 px-3 text-right">Kalıntı Risk</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100" id="fmea-body">
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span class="icon-svg text-red-600 text-[16px]" data-icon="water_loss"></span>
+                  <span>Kuraklık &amp; Su Çekilmesi</span>
+                </td>
+                <td class="py-2.5 px-3 text-gray-600">0.82 (Yüksek)</td>
+                <td class="py-2.5 px-3 text-gray-600">0.90 (Kritik)</td>
+                <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-bold">ÇOK YÜKSEK</span></td>
+                <td class="py-2.5 px-3 text-gray-600" id="fmea-mit-1">3.500 m³ Sarnıç + Gri Su Şebekesi</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-emerald-700" id="fmea-res-1">%22 (Düşük)</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span class="icon-svg text-amber-600 text-[16px]" data-icon="thermostat"></span>
+                  <span>Kentsel Isı Adası Etkisi</span>
+                </td>
+                <td class="py-2.5 px-3 text-gray-600">0.78 (Yüksek)</td>
+                <td class="py-2.5 px-3 text-gray-600">0.65 (Orta)</td>
+                <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">ORTA-YÜKSEK</span></td>
+                <td class="py-2.5 px-3 text-gray-600" id="fmea-mit-2">Gölgeli koridorlar, soğuk çatı kaplaması</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-emerald-700" id="fmea-res-2">%31 (Kontrollü)</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span class="icon-svg text-sky-600 text-[16px]" data-icon="flood"></span>
+                  <span>Şiddetli Yağış &amp; Ani Taşkın</span>
+                </td>
+                <td class="py-2.5 px-3 text-gray-600">0.60 (Orta)</td>
+                <td class="py-2.5 px-3 text-gray-600">0.80 (Yüksek)</td>
+                <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 text-[10px] font-bold">ORTA-YÜKSEK</span></td>
+                <td class="py-2.5 px-3 text-gray-600" id="fmea-mit-3">Geçirgen kaplamalar, yağmur bahçeleri</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-emerald-700" id="fmea-res-3">%18 (Düşük)</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span class="icon-svg text-red-600 text-[16px]" data-icon="warning"></span>
+                  <span>Sismik Tehlike / Deprem</span>
+                </td>
+                <td class="py-2.5 px-3 text-gray-600">0.45 (Olası)</td>
+                <td class="py-2.5 px-3 text-gray-600">0.95 (Katastrofik)</td>
+                <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-bold">YÜKSEK</span></td>
+                <td class="py-2.5 px-3 text-gray-600" id="fmea-mit-4">Esnek hatlar, otonom mikroşebeke modu</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-amber-700" id="fmea-res-4">%40 (İzleniyor)</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-gray-900 flex items-center gap-1.5">
+                  <span class="icon-svg text-amber-600 text-[16px]" data-icon="power_off"></span>
+                  <span>Enterkonnekte Kesinti</span>
+                </td>
+                <td class="py-2.5 px-3 text-gray-600">0.70 (Yüksek)</td>
+                <td class="py-2.5 px-3 text-gray-600">0.75 (Yüksek)</td>
+                <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">YÜKSEK</span></td>
+                <td class="py-2.5 px-3 text-gray-600" id="fmea-mit-5">4.2 MWh BESS batarya + kritik ada modu</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-emerald-700" id="fmea-res-5">%14 (Minimal)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100 flex-wrap gap-1">
+          <span id="fmea-summary">Aktif Senaryo ile Genel Risk Düşüşü: <strong>%64.2</strong></span>
+          <span>Metodoloji: ISO 31000 &amp; IPCC AR6 Standartları</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. SİSTEMLER ARASI ÇAPRAZ BAĞIMLILIK TOPOLOJİSİ -->
+    <section class="p-4 lg:p-5 rounded-xl bg-white border border-gray-200 shadow-sm flex flex-col gap-4" id="topo-sec">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Karmaşık Ağ Mimarisi</span>
+          <h3 class="text-sm font-bold text-gray-900">Sistemler Arası Çapraz Bağımlılık Topolojisi</h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-[11px]">
+          <span class="flex items-center gap-1 px-2 py-0.5 rounded bg-sky-50 text-sky-800">
+            <span class="w-2 h-2 rounded-full bg-sky-600"></span>Fiziksel Akış
+          </span>
+          <span class="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-primary"></span>Operasyonel Sinerji
+          </span>
+          <span class="flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 text-amber-800">
+            <span class="w-2 h-2 rounded-full bg-amber-600"></span>Mekânsal Bağlantı
+          </span>
+          <span class="flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 text-gray-800">
+            <span class="w-2 h-2 rounded-full bg-gray-700"></span>SCADA Telemetri
+          </span>
+        </div>
+      </div>
+
+      <!-- 5 Node Kartı -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <!-- Node 1 -->
+        <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between gap-2.5 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-secondary uppercase">01 • Su Altyapısı</span>
+            <span class="icon-svg text-secondary text-[20px]" data-icon="water"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-gray-900">Sarnıç &amp; Arıtma</h4>
+            <p class="text-[11px] text-gray-500 mt-1" id="node-1-desc">Yağmur suyu hasadı, gri su geri kazanım şebekesi ve hidrofor dengeleme.</p>
+          </div>
+          <div class="pt-2 border-t border-gray-200 text-[10px] flex flex-col gap-0.5">
+            <span class="text-secondary font-semibold">Bağlantı: PV Yıkama &amp; Peyzaj</span>
+            <span class="text-gray-500" id="node-1-meta">Otonomi: 42 Gün Rezerv</span>
+          </div>
+        </div>
+
+        <!-- Node 2 -->
+        <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between gap-2.5 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-amber-700 uppercase">02 • Temiz Enerji</span>
+            <span class="icon-svg text-amber-600 text-[20px]" data-icon="solar_power"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-gray-900">GES + BESS Batarya</h4>
+            <p class="text-[11px] text-gray-500 mt-1" id="node-2-desc">8.420 kWp çatı panelleri ve 4.2 MWh lityum-iyon mikroşebeke depolama.</p>
+          </div>
+          <div class="pt-2 border-t border-gray-200 text-[10px] flex flex-col gap-0.5">
+            <span class="text-primary font-semibold">Bağlantı: Su Pompaları &amp; EV Şarj</span>
+            <span class="text-gray-500" id="node-2-meta">Yaz Fazlası: %8.8 Şebeke</span>
+          </div>
+        </div>
+
+        <!-- Node 3 -->
+        <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between gap-2.5 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-primary uppercase">03 • Katı Atık</span>
+            <span class="icon-svg text-primary text-[20px]" data-icon="recycling"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-gray-900">Yemekhane Kompost</h4>
+            <p class="text-[11px] text-gray-500 mt-1" id="node-3-desc">Günlük 1.8 ton organik atık biyoreaktörlerde işlenerek gübreye dönüşür.</p>
+          </div>
+          <div class="pt-2 border-t border-gray-200 text-[10px] flex flex-col gap-0.5">
+            <span class="text-primary font-semibold">Bağlantı: Ağaçlandırma Besini</span>
+            <span class="text-gray-500" id="node-3-meta">CH₄ Engelleme: %92</span>
+          </div>
+        </div>
+
+        <!-- Node 4 -->
+        <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between gap-2.5 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-secondary uppercase">04 • Mobilite</span>
+            <span class="icon-svg text-secondary text-[20px]" data-icon="electric_car"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-gray-900">E-Ring &amp; Bisiklet Ağı</h4>
+            <p class="text-[11px] text-gray-500 mt-1">Kampüs içi sıfır emisyonlu elektrikli ring otobüsleri ve V2G enerji aktarımı.</p>
+          </div>
+          <div class="pt-2 border-t border-gray-200 text-[10px] flex flex-col gap-0.5">
+            <span class="text-secondary font-semibold">Bağlantı: BESS Pik Traşlama</span>
+            <span class="text-gray-500" id="node-4-meta">Elektrik Otonomisi: 18.5 saat</span>
+          </div>
+        </div>
+
+        <!-- Node 5 -->
+        <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200/80 flex flex-col justify-between gap-2.5 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-primary uppercase">05 • Doğa Tabanlı</span>
+            <span class="icon-svg text-primary text-[20px]" data-icon="park"></span>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-gray-900">Yeşil / Mavi Koridor</h4>
+            <p class="text-[11px] text-gray-500 mt-1">İki Eylül rüzgar aksına göre mikroklima bariyerleri ve gölet tamponları.</p>
+          </div>
+          <div class="pt-2 border-t border-gray-200 text-[10px] flex flex-col gap-0.5">
+            <span class="text-primary font-semibold">Bağlantı: Isı Adası (-2.4°C)</span>
+            <span class="text-gray-500" id="node-5-meta">Taşkın Sönümleme: %82</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-lg bg-gray-50 border border-gray-200 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-700">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0"></span>
+          <span><strong>Kapalı Döngü Metabolizma:</strong> Bir sistemin atığı (yağmur, organik çöp, batarya ısısı) diğerinin girdisi olarak modellenmiştir.</span>
+        </div>
+        <span class="font-bold text-primary shrink-0 mt-1 sm:mt-0" id="circular-idx">Döngüsel Ekonomi İndeksi: %84.6</span>
+      </div>
+    </section>
+
+    <!-- 7. ALT BİLGİ & AKADEMİK BEYAN -->
+    <footer class="flex flex-col gap-3 mb-6">
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+        <span class="icon-svg text-amber-700 text-[22px] shrink-0 mt-0.5" data-icon="warning"></span>
+        <div class="flex flex-col gap-0.5 text-xs text-amber-900">
+          <span class="font-bold text-amber-800">Veri Uyarısı ve Stokastik Model Belirsizlik Beyanı</span>
+          <p class="leading-relaxed text-amber-800/90" id="footer-disclaimer">
+            Bu karar destek platformu, Eskişehir Teknik Üniversitesi İki Eylül Kampüsü <strong id="disc-pop">14.500 eşdeğer aktif kullanıcı/öğrenci</strong> nüfusu baz alınarak çalıştırılmaktadır. Çatılardaki panel verimi ve yağmur hasat katsayıları üzerinde <strong>±%5 hata payı duyarlılık analizi</strong> yürütülmüş olup, ekstrem meteorolojik dalgalanmalarda MGM İstasyon No: 17124 arşiviyle eşzamanlı kalibrasyon yapılması tavsiye edilir.
+          </p>
+        </div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-white border border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span><strong>Referanslar:</strong> ESTÜ 2026 Kurumsal Mali Raporu</span>
+          <span>•</span>
+          <span>MGM 2010–2024 Yağış/Işınım Arşivi</span>
+          <span>•</span>
+          <span>IPCC SSP2-4.5 Bölgesel İklim Projeksiyonu</span>
+        </div>
+        <span class="font-semibold text-primary shrink-0">ÇEV515 • Endüstri Mühendisliği Karar Destek Ekibi B</span>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- HESAPLAMA MOTORU (GÖRELİ YOL, DOKUNULMAMIŞ model.js) -->
+<script src="./model.js"></script>
+
+<!-- ARAYÜZ SENKRONİZASYON, SVG ÇİZİM VE ETKİLEŞİM MANTIĞI -->
+<script>
+(function () {
+  'use strict';
+
+  // 1. Bağımlılıksız Vektörel İkon Haritası (CDN gerektirmez)
+  var ICONS = {
+    hub: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M9.5 10L6.5 7.5M14.5 10l3-2.5M9.5 14l-3 2.5M14.5 14l3 2.5"/></svg>',
+    dashboard: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>',
+    schema: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v3h12V9M12 12v3"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    water_drop: '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+    query_stats: '<svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7"/><circle cx="18" cy="16" r="3"/><path d="M20.2 18.2L22 20"/></svg>',
+    chevron_right: '<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>',
+    tune: '<svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+    verified: '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 2.26L19 4l1 3.91L22.5 11 20 14.09 19 18l-3.91-.26L12 20l-3.09-2.26L5 18l-1-3.91L1.5 11 4 7.91 5 4l3.91.26z"/><polyline points="9 12 11 14 15 10"/></svg>',
+    play_circle: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>',
+    autorenew: '<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>',
+    done_all: '<svg viewBox="0 0 24 24"><polyline points="18 6 7 17 2 12"/><polyline points="22 10 13 19 11 17"/></svg>',
+    solar_power: '<svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="3"/><path d="M3 14h18l-2 7H5l-2-7z"/><line x1="12" y1="14" x2="12" y2="21"/><line x1="7.5" y1="17.5" x2="16.5" y2="17.5"/></svg>',
+    trending_up: '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    sync_alt: '<svg viewBox="0 0 24 24"><polyline points="17 2 21 6 17 10"/><line x1="3" y1="6" x2="21" y2="6"/><polyline points="7 22 3 18 7 14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>',
+    waves: '<svg viewBox="0 0 24 24"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>',
+    battery_charging_full: '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="18" rx="2"/><line x1="10" y1="2" x2="14" y2="2"/><polygon points="13 8 9 14 12 14 11 18 15 12 12 12 13 8"/></svg>',
+    account_balance_wallet: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h4"/><circle cx="16" cy="12" r="1"/></svg>',
+    payments: '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>',
+    timelapse: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    eco: '<svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
+    shield: '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    water_loss: '<svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+    thermostat: '<svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
+    flood: '<svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v8H3z"/><path d="M2 18c1.5 1 3.5 1 5 0s3.5-1 5 0 3.5 1 5 0 3.5-1 5 0"/><path d="M2 22c1.5 1 3.5 1 5 0s3.5-1 5 0 3.5 1 5 0 3.5-1 5 0"/></svg>',
+    warning: '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    power_off: '<svg viewBox="0 0 24 24"><path d="M18.36 6.64A9 9 0 0 1 20.77 15"/><path d="M6.16 6.16a9 9 0 1 0 12.68 12.68"/><path d="M12 2v4"/><line x1="2" y1="2" x2="22" y2="22"/></svg>',
+    water: '<svg viewBox="0 0 24 24"><path d="M2 8c2 1 4 1 6 0s4-1 6 0 4 1 6 0"/><path d="M2 14c2 1 4 1 6 0s4-1 6 0 4 1 6 0"/><path d="M2 20c2 1 4 1 6 0s4-1 6 0 4 1 6 0"/></svg>',
+    recycling: '<svg viewBox="0 0 24 24"><polyline points="7 19 3 15 7 11"/><path d="M3 15h11a4 4 0 0 0 4-4V6"/><polyline points="17 5 21 9 17 13"/><path d="M21 9H10a4 4 0 0 0-4 4v5"/></svg>',
+    electric_car: '<svg viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-5H7L5 12v5z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg>',
+    park: '<svg viewBox="0 0 24 24"><polygon points="12 2 5 12 9 12 6 18 18 18 15 12 19 12 12 2"/><line x1="12" y1="18" x2="12" y2="22"/></svg>',
+    dark_mode: '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    light_mode: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+  };
+
+  function renderIcons() {
+    var nodes = document.querySelectorAll('[data-icon]');
+    for (var i = 0; i < nodes.length; i++) {
+      var key = nodes[i].getAttribute('data-icon');
+      if (ICONS[key]) nodes[i].innerHTML = ICONS[key];
+    }
+  }
+
+  // Yardımcı Biçimlendiriciler
+  function fmtInt(n) {
+    return Math.round(Number(n) || 0).toLocaleString('tr-TR');
+  }
+
+  function fmtMUsd(n) {
+    var v = (Number(n) || 0) / 1e6;
+    var sign = v > 0 ? '+' : (v < 0 ? '-' : '');
+    return sign + '$' + Math.abs(v).toFixed(2) + 'M';
+  }
+
+  function fmtAbsMUsd(n) {
+    var v = Math.abs(Number(n) || 0) / 1e6;
+    return '$' + v.toFixed(2) + 'M';
+  }
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  var MONTHS = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+
+  // 2. Durum (State) ve Parametre Senkronizasyonu (sync)
+  var currentHorizon = (window.ESTU && window.ESTU.DEF && window.ESTU.DEF.horizon) || 2030;
+
+  function readStateFromDOM() {
+    return {
+      ges: Number(el('sl-ges').value),
+      cistern: Number(el('sl-cistern').value),
+      battery: Number(el('sl-battery').value),
+      pop: Number(el('sl-pop').value),
+      roof: Number(el('sl-roof').value),
+      tariff: Number(el('sl-tariff').value),
+      greywater: Boolean(el('chk-grey').checked),
+      compost: Boolean(el('chk-compost').checked),
+      esco: Boolean(el('chk-esco').checked),
+      horizon: currentHorizon
+    };
+  }
+
+  function syncLabels(p) {
+    el('val-ges').textContent = p.ges + '%';
+    el('val-cistern').textContent = fmtInt(p.cistern) + ' m³';
+    el('val-battery').textContent = Number(p.battery).toFixed(1) + ' MWh';
+    el('val-pop').textContent = fmtInt(p.pop);
+    el('val-roof').textContent = fmtInt(p.roof) + ' m²';
+    el('val-tariff').textContent = Number(p.tariff).toFixed(2) + ' $/kWh';
+  }
+
+  // 3. Bağımlılıksız SVG Grafik Çizicileri (chart)
+  function chartEnergy(r) {
+    var svg = el('svg-c1');
+    if (!svg) return;
+    var maxVal = 1;
+    for (var i = 0; i < 12; i++) {
+      if (r.mp[i] > maxVal) maxVal = r.mp[i];
+      if (r.md[i] > maxVal) maxVal = r.md[i];
+    }
+    maxVal = Math.max(maxVal * 1.12, 500);
+
+    var baseY = 180;
+    var plotH = 156;
+    var out = '';
+
+    // Kılavuz çizgileri
+    var gy = [20, 65, 110, 155];
+    for (var g = 0; g < gy.length; g++) {
+      out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="25" x2="485" y1="' + gy[g] + '" y2="' + gy[g] + '"></line>';
+    }
+    out += '<line class="stroke-gray-200" stroke-width="1.5" x1="25" x2="485" y1="' + baseY + '" y2="' + baseY + '"></line>';
+
+    // Yaz fazlası arka plan vurgusu
+    out += '<rect fill="#fef3c7" fill-opacity="0.35" height="160" rx="4" width="120" x="215" y="20"></rect>';
+    out += '<text fill="#b45309" font-size="9" font-weight="600" x="230" y="32">Yaz Fazlası İhracı</text>';
+
+    var julyNet = r.mp[6] - r.md[6];
+
+    for (var m = 0; m < 12; m++) {
+      var xBase = 35 + m * 37;
+      var hProd = Math.max(2, Math.round((r.mp[m] / maxVal) * plotH));
+      var hDem = Math.max(2, Math.round((r.md[m] / maxVal) * plotH));
+      var yProd = baseY - hProd;
+      var yDem = baseY - hDem;
+      var barColor = (m >= 5 && m <= 7) ? '#f59e0b' : '#fcd34d';
+
+      out += '<rect fill="' + barColor + '" height="' + hProd + '" rx="1.5" width="10" x="' + xBase + '" y="' + yProd + '"><title>' + MONTHS[m] + ' GES: ' + r.mp[m] + ' MWh</title></rect>';
+      out += '<rect fill="#0284c7" height="' + hDem + '" rx="1.5" width="10" x="' + (xBase + 12) + '" y="' + yDem + '"><title>' + MONTHS[m] + ' Talep: ' + r.md[m] + ' MWh</title></rect>';
+    }
+
+    out += '<g fill="var(--chart-label)" font-size="9" text-anchor="middle">';
+    for (var k = 0; k < 12; k++) {
+      out += '<text x="' + (46 + k * 37) + '" y="193">' + MONTHS[k] + '</text>';
+    }
+    out += '</g>';
+
+    svg.innerHTML = out;
+    el('c1-foot-left').innerHTML = 'Yıllık Üretim: <strong>' + fmtInt(r.prod) + ' MWh</strong>';
+    el('c1-foot-right').textContent = julyNet >= 0
+      ? ('Temmuz Zirvesi: +' + fmtInt(julyNet) + ' MWh Şebekeye İade')
+      : ('Temmuz Dengesi: ' + fmtInt(julyNet) + ' MWh Şebeke Çekişi');
+  }
+
+  function chartCistern(r, p) {
+    var svg = el('svg-c2');
+    if (!svg) return;
+    var cap = Math.max(p.cistern, 1500);
+    var maxScale = Math.max(cap * 1.08, 2000);
+    var baseY = 175;
+    var plotH = 148;
+
+    var pts = [];
+    var maxTl = 0, maxIdx = 0;
+    var minTl = Infinity, minIdx = 0;
+
+    for (var i = 0; i < 12; i++) {
+      var v = r.tl[i];
+      if (v > maxTl) { maxTl = v; maxIdx = i; }
+      if (v < minTl) { minTl = v; minIdx = i; }
+      var x = Math.round(30 + (i / 11) * 450);
+      var y = Math.round(baseY - (v / maxScale) * plotH);
+      pts.push({ x: x, y: y, v: v });
+    }
+
+    // Yumuşak eğri oluştur
+    var lineD = 'M ' + pts[0].x + ' ' + pts[0].y;
+    for (var j = 0; j < pts.length - 1; j++) {
+      var cx = Math.round((pts[j].x + pts[j + 1].x) / 2);
+      lineD += ' C ' + cx + ' ' + pts[j].y + ', ' + cx + ' ' + pts[j + 1].y + ', ' + pts[j + 1].x + ' ' + pts[j + 1].y;
+    }
+    var areaD = 'M ' + pts[0].x + ' ' + baseY + ' L ' + pts[0].x + ' ' + pts[0].y + lineD.substring(('M ' + pts[0].x + ' ' + pts[0].y).length) + ' L ' + pts[11].x + ' ' + baseY + ' Z';
+
+    var threshY = Math.max(25, Math.min(168, Math.round(baseY - (1200 / maxScale) * plotH)));
+    var pMax = pts[maxIdx];
+    var pMin = pts[minIdx];
+
+    var out = '';
+    out += '<defs><linearGradient id="waterGradient" x1="0" x2="0" y1="0" y2="1">';
+    out += '<stop offset="0%" stop-color="#0284c7" stop-opacity="0.32"></stop>';
+    out += '<stop offset="100%" stop-color="#0284c7" stop-opacity="0.02"></stop>';
+    out += '</linearGradient></defs>';
+
+    out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="25" x2="485" y1="20" y2="20"></line>';
+    out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="25" x2="485" y1="70" y2="70"></line>';
+    out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="25" x2="485" y1="120" y2="120"></line>';
+    out += '<line class="stroke-gray-200" stroke-width="1.5" x1="25" x2="485" y1="175" y2="175"></line>';
+
+    out += '<line stroke="#ba1a1a" stroke-dasharray="4 3" stroke-width="1.5" x1="25" x2="485" y1="' + threshY + '" y2="' + threshY + '"></line>';
+    out += '<text fill="#ba1a1a" font-size="9" font-weight="600" x="32" y="' + (threshY - 5) + '">Kritik Emniyet: 1.200 m³</text>';
+
+    out += '<path d="' + areaD + '" fill="url(#waterGradient)"></path>';
+    out += '<path d="' + lineD + '" fill="none" stroke="#0284c7" stroke-linecap="round" stroke-width="2.5"></path>';
+
+    out += '<circle cx="' + pMax.x + '" cy="' + pMax.y + '" fill="#0284c7" r="3.5" stroke="#ffffff" stroke-width="2"></circle>';
+    out += '<circle cx="' + pMin.x + '" cy="' + pMin.y + '" fill="#ba1a1a" r="3.5" stroke="#ffffff" stroke-width="2"></circle>';
+    out += '<text fill="#0284c7" font-size="9" font-weight="600" x="' + Math.max(30, Math.min(350, pMax.x - 20)) + '" y="' + Math.max(14, pMax.y - 8) + '">' + fmtInt(maxTl) + ' m³ (Zirve)</text>';
+    out += '<text fill="var(--chart-label)" font-size="9" x="' + Math.max(30, Math.min(380, pMin.x - 25)) + '" y="' + Math.min(168, pMin.y + 14) + '">' + fmtInt(minTl) + ' m³ (Dip)</text>';
+
+    out += '<g fill="var(--chart-label)" font-size="9" text-anchor="middle">';
+    out += '<text x="35" y="190">Oca</text><text x="125" y="190">Nis</text><text x="215" y="190">Haz</text>';
+    out += '<text x="305" y="190">Ağu</text><text x="395" y="190">Eki</text><text x="475" y="190">Ara</text>';
+    out += '</g>';
+
+    svg.innerHTML = out;
+    var fillPct = p.cistern > 0 ? Math.min(100, (maxTl / p.cistern) * 100).toFixed(1) : '0.0';
+    el('c2-foot-left').innerHTML = 'Kurak Sezon Dayanımı: <strong>' + r.autoW + ' Gün</strong>';
+    el('c2-foot-right').textContent = 'Maks Doluluk: %' + fillPct + ' • Taşkın: ' + fmtInt(r.over) + ' m³';
+  }
+
+  function chartCashflow(r) {
+    var svg = el('svg-c3');
+    if (!svg) return;
+    var cf = r.cf;
+    var minV = Math.min.apply(null, cf.concat([-1000000]));
+    var maxV = Math.max.apply(null, cf.concat([1000000]));
+    var span = Math.max(1, maxV - minV);
+
+    function yOf(val) {
+      return Math.round(170 - ((val - minV) / span) * 135);
+    }
+    function xOf(yr) {
+      return Math.round(40 + (yr / 25) * 435);
+    }
+
+    var zeroY = yOf(0);
+    var pbClamped = Math.max(0.5, Math.min(25, r.pb));
+    var pbX = xOf(pbClamped);
+
+    var pathD = '';
+    for (var y = 0; y <= 25; y++) {
+      var px = xOf(y);
+      var py = yOf(cf[y]);
+      pathD += (y === 0 ? 'M ' : ' L ') + px + ' ' + py;
+    }
+
+    var startY = yOf(cf[0]);
+    var endY = yOf(cf[25]);
+
+    var out = '';
+    out += '<line class="stroke-gray-300" stroke-width="1.5" x1="30" x2="480" y1="' + zeroY + '" y2="' + zeroY + '"></line>';
+    out += '<text fill="var(--text-main)" font-size="9" font-weight="600" x="4" y="' + (zeroY + 3) + '">$0M</text>';
+    out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="30" x2="480" y1="35" y2="35"></line>';
+    out += '<line class="stroke-gray-100" stroke-dasharray="3 3" stroke-width="1" x1="30" x2="480" y1="170" y2="170"></line>';
+    out += '<text fill="var(--chart-label)" font-size="8.5" x="2" y="38">' + fmtMUsd(maxV) + '</text>';
+    out += '<text fill="var(--chart-label)" font-size="8.5" x="2" y="173">' + fmtMUsd(minV) + '</text>';
+
+    out += '<line stroke="#1F7A5A" stroke-dasharray="3 2" stroke-width="1.5" x1="' + pbX + '" x2="' + pbX + '" y1="20" y2="175"></line>';
+    out += '<rect fill="#1F7A5A" height="16" rx="3" width="54" x="' + (pbX - 27) + '" y="14"></rect>';
+    out += '<text fill="#ffffff" font-size="9" font-weight="600" text-anchor="middle" x="' + pbX + '" y="25">' + r.pb.toFixed(1) + ' Yıl</text>';
+
+    out += '<path d="' + pathD + '" fill="none" stroke="#1F7A5A" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.8"></path>';
+    out += '<circle cx="40" cy="' + startY + '" fill="#ba1a1a" r="4" stroke="#ffffff" stroke-width="1.5"></circle>';
+    out += '<circle cx="' + pbX + '" cy="' + zeroY + '" fill="#1F7A5A" r="4.2" stroke="#ffffff" stroke-width="2"></circle>';
+    out += '<circle cx="475" cy="' + endY + '" fill="#1F7A5A" r="4.5" stroke="#ffffff" stroke-width="2"></circle>';
+
+    out += '<text fill="#ba1a1a" font-size="9" font-weight="600" x="48" y="' + Math.min(168, startY - 4) + '">CAPEX: -' + fmtAbsMUsd(r.capex) + '</text>';
+    out += '<text fill="#1F7A5A" font-size="10" font-weight="700" text-anchor="end" x="470" y="' + Math.max(28, endY - 8) + '">Net: ' + fmtMUsd(r.npv) + '</text>';
+
+    out += '<g fill="var(--chart-label)" font-size="9" text-anchor="middle">';
+    out += '<text x="40" y="190">Yıl 0</text><text x="' + pbX + '" y="190">Yıl ' + r.pb.toFixed(1) + '</text>';
+    out += '<text x="260" y="190">Yıl 12</text><text x="365" y="190">Yıl 18</text><text x="470" y="190">Yıl 25</text>';
+    out += '</g>';
+
+    svg.innerHTML = out;
+    el('c3-badge').textContent = 'Geri Ödeme: ' + r.pb.toFixed(1) + ' Yıl';
+    el('c3-foot-left').innerHTML = 'İç Verim Oranı (IRR): <strong>%' + r.irr.toFixed(1) + '</strong>';
+    el('c3-foot-right').textContent = 'Tasarruf: $' + Math.round(r.annualNet / 1000) + 'k/yıl';
+  }
+
+  function chartMonteCarlo(m) {
+    var svg = el('svg-c4');
+    if (!svg) return;
+    var arr = m.a;
+    var n = arr.length;
+    var minVal = Math.min(arr[0], -500000);
+    var maxVal = Math.max(arr[n - 1], 1000000);
+    var span = Math.max(1, maxVal - minVal);
+
+    var bins = 18;
+    var counts = new Array(bins).fill(0);
+    for (var i = 0; i < n; i++) {
+      var idx = Math.min(bins - 1, Math.max(0, Math.floor(((arr[i] - minVal) / span) * bins)));
+      counts[idx]++;
+    }
+    var maxCount = Math.max.apply(null, counts.concat([1]));
+
+    function xPos(val) {
+      var ratio = (val - minVal) / span;
+      return Math.round(55 + Math.max(0, Math.min(1, ratio)) * 390);
+    }
+
+    var zeroX = xPos(0);
+    var p50X = xPos(m.p50);
+    var p90X = xPos(m.p90);
+
+    var out = '';
+    out += '<line class="stroke-gray-200" stroke-width="1.5" x1="25" x2="480" y1="175" y2="175"></line>';
+    out += '<rect fill="#1F7A5A" fill-opacity="0.05" height="155" rx="3" width="' + Math.max(0, 475 - zeroX) + '" x="' + zeroX + '" y="20"></rect>';
+
+    out += '<line stroke="#ba1a1a" stroke-dasharray="3 2" stroke-width="1.5" x1="' + zeroX + '" x2="' + zeroX + '" y1="20" y2="175"></line>';
+    out += '<text fill="#ba1a1a" font-size="9" font-weight="600" text-anchor="middle" x="' + zeroX + '" y="28">NPV = $0</text>';
+
+    out += '<g>';
+    for (var b = 0; b < bins; b++) {
+      var bCenterVal = minVal + ((b + 0.5) / bins) * span;
+      var bx = 55 + b * 21;
+      var bh = Math.max(3, Math.round((counts[b] / maxCount) * 145));
+      var by = 175 - bh;
+      var fill = bCenterVal < 0 ? '#cbd5e1' : (Math.abs(bCenterVal - m.p50) < span * 0.12 ? '#1F7A5A' : '#10b981');
+      out += '<rect fill="' + fill + '" height="' + bh + '" rx="1.5" width="15" x="' + bx + '" y="' + by + '"></rect>';
+    }
+    out += '</g>';
+
+    out += '<line stroke="#1F7A5A" stroke-width="2" x1="' + p50X + '" x2="' + p50X + '" y1="15" y2="175"></line>';
+    out += '<text fill="#1F7A5A" font-size="9" font-weight="700" text-anchor="middle" x="' + p50X + '" y="12">P50: ' + fmtMUsd(m.p50) + '</text>';
+
+    out += '<line stroke="#0284c7" stroke-dasharray="2 2" stroke-width="1.5" x1="' + p90X + '" x2="' + p90X + '" y1="32" y2="175"></line>';
+    out += '<text fill="#0284c7" font-size="8.5" font-weight="600" text-anchor="middle" x="' + p90X + '" y="28">P90: ' + fmtMUsd(m.p90) + '</text>';
+
+    out += '<g fill="var(--chart-label)" font-size="9" text-anchor="middle">';
+    out += '<text x="65" y="190">' + fmtMUsd(minVal) + '</text>';
+    out += '<text x="' + zeroX + '" y="190">$0.0M</text>';
+    out += '<text x="' + p50X + '" y="190">' + fmtMUsd(m.p50) + '</text>';
+    out += '<text x="440" y="190">' + fmtMUsd(maxVal) + '</text>';
+    out += '</g>';
+
+    svg.innerHTML = out;
+    var negRisk = Math.max(0, 100 - m.pPos).toFixed(1);
+    el('c4-badge').textContent = 'P(NPV > 0) = %' + m.pPos.toFixed(1);
+    el('c4-foot-left').textContent = 'Negatif Risk: %' + negRisk + ' (pb50: ' + m.pb50.toFixed(1) + 'y)';
+    el('c4-foot-right').innerHTML = 'P10: <strong>' + fmtMUsd(m.p10) + '</strong> • P50: <strong>' + fmtMUsd(m.p50) + '</strong> • P90: <strong>' + fmtMUsd(m.p90) + '</strong>';
+  }
+
+  // 4. Tüm Kartları, Grafikleri ve Dirençlilik Sekmesini Güncelle (draw)
+  function draw(r, m, p) {
+    // KPI 1: GES Kurulu Güç (kwp)
+    el('kpi-kwp').textContent = fmtInt(r.kwp);
+    el('kpi-ges-badge').textContent = '%' + p.ges + ' Çatı';
+    el('bar-kwp').style.width = Math.min(100, p.ges) + '%';
+    el('sub-kwp').textContent = fmtInt(r.activeRoof) + ' m² aktif panel alanı';
+
+    // KPI 2: Elektrik Karşılama (cov, prod)
+    el('kpi-cov').textContent = '%' + r.cov.toFixed(1);
+    var deltaCov = (r.cov - 22.8).toFixed(1);
+    el('kpi-cov-delta').innerHTML = '<span class="icon-svg text-[12px]">' + ICONS.trending_up + '</span>' + (deltaCov >= 0 ? '+' : '') + deltaCov + '%';
+    el('bar-cov').style.width = Math.min(100, r.cov) + '%';
+    el('sub-prod').textContent = 'Yıllık ' + fmtInt(r.prod) + ' MWh üretim';
+
+    // KPI 3: Öz-Tüketim Oranı (self, S, X)
+    var expPct = Math.max(0, 100 - r.self).toFixed(1);
+    el('kpi-self').textContent = '%' + r.self.toFixed(1);
+    el('kpi-export').textContent = 'İhracat: %' + expPct;
+    el('bar-self').style.width = r.self.toFixed(1) + '%';
+    el('bar-exp').style.width = expPct + '%';
+    el('sub-self').textContent = 'Öz: ' + fmtInt(r.S) + ' MWh • İhraç: ' + fmtInt(r.X) + ' MWh';
+
+    // KPI 4: Yağmur Hasadı Payı (wCov)
+    el('kpi-wcov').textContent = '%' + r.wCov.toFixed(1);
+    el('bar-wcov').style.width = Math.min(100, r.wCov) + '%';
+    el('sub-wcov').textContent = fmtInt(p.cistern) + ' m³ sarnıç depolama';
+
+    // KPI 5: Su Otonomisi (autoW)
+    el('kpi-autow').textContent = r.autoW;
+    el('sub-autow').textContent = r.autoW >= 30 ? 'Yüksek kuraklık direnci' : (r.autoW >= 15 ? 'Orta seviye rezerv' : 'Kritik kuraklık riski');
+
+    // KPI 6: Elektrik Otonomisi (autoE)
+    el('kpi-autoe').textContent = r.autoE.toFixed(1);
+    el('badge-autoe').textContent = p.battery.toFixed(1) + ' MWh BESS';
+    el('bar-autoe').style.width = Math.min(100, (r.autoE / 24) * 100).toFixed(0) + '%';
+
+    // KPI 7: CAPEX (capex)
+    el('kpi-capex').textContent = fmtAbsMUsd(r.capex);
+    el('badge-capex').textContent = p.esco ? 'ESCO Paylaşımlı' : 'Altyapı + GES';
+    el('sub-capex').textContent = p.esco ? 'ESCO (%32 düşük ilk sermaye)' : 'Sermaye maliyeti amortismanı';
+
+    // KPI 8: NPV (npv)
+    el('kpi-npv').textContent = fmtMUsd(r.npv);
+
+    // KPI 9: Geri Ödeme Süresi (pb & pb50)
+    el('kpi-pb').textContent = r.pb.toFixed(1);
+    el('badge-irr').textContent = 'IRR: %' + r.irr.toFixed(1);
+    el('bar-pb').style.width = Math.min(100, Math.max(10, (1 - r.pb / 25) * 100)).toFixed(0) + '%';
+    el('sub-pb').textContent = 'MC Medyan (pb50): ' + m.pb50.toFixed(1) + ' yıl';
+
+    // KPI 10: P(NPV > 0) (pPos)
+    el('kpi-ppos').textContent = '%' + m.pPos.toFixed(1);
+    el('bar-ppos').style.width = Math.min(100, m.pPos) + '%';
+    el('sub-ppos').textContent = 'Risk marjı: %' + Math.max(0, 100 - m.pPos).toFixed(1);
+
+    // KPI 11: Karbon Azaltımı (co2)
+    el('kpi-co2').textContent = fmtInt(r.co2);
+    el('badge-trees').textContent = fmtInt(r.trees) + ' Ağaç / Yıl Eşdeğeri';
+    el('bar-co2').style.width = Math.min(100, r.netZeroPct) + '%';
+    el('sub-co2').textContent = 'Hedef Ulaşımı: %' + r.netZeroPct.toFixed(1);
+
+    // Grafik 1..4 SVG Çizimleri
+    chartEnergy(r);
+    chartCistern(r, p);
+    chartCashflow(r);
+    chartMonteCarlo(m);
+
+    // Grafik 5: Su & Karbon Akışı
+    var totW = Math.max(1, r.wGrid + r.wRain + r.wGrey);
+    var gridPct = ((r.wGrid / totW) * 100).toFixed(1);
+    var rainPct = ((r.wRain / totW) * 100).toFixed(1);
+    var greyPct = ((r.wGrey / totW) * 100).toFixed(1);
+    el('c5-val-grid').textContent = fmtInt(r.wGrid) + ' m³ (%' + gridPct + ')';
+    el('c5-bar-grid').style.width = gridPct + '%';
+    el('c5-val-rain').textContent = fmtInt(r.wRain) + ' m³ (%' + rainPct + ')';
+    el('c5-bar-rain').style.width = Math.min(100, Number(rainPct) * 1.6) + '%';
+    el('c5-val-grey').textContent = fmtInt(r.wGrey) + ' m³ (' + (p.greywater ? 'Aktif' : 'Kapalı') + ')';
+    el('c5-bar-grey').style.width = greyPct + '%';
+    el('c5-val-co2').textContent = '-' + fmtInt(r.co2) + ' tCO₂';
+    el('c5-bar-co2a').style.width = Math.min(92, Math.max(25, r.cov * 0.95)).toFixed(0) + '%';
+    el('c5-bar-co2b').style.width = Math.max(8, 100 - Math.min(92, Math.max(25, r.cov * 0.95))).toFixed(0) + '%';
+    el('c5-foot-left').innerHTML = 'Yıllık Su Tasarrufu: <strong>$' + fmtInt(r.wSaveUsd) + '</strong>';
+    el('c5-foot-right').textContent = 'Net-Zero İlerlemesi: %' + r.netZeroPct.toFixed(1);
+
+    // Grafik 6: Sektörel Enerji Tüketim Dağılımı
+    el('c6-badge').textContent = fmtInt(r.totalDemand) + ' MWh/yıl';
+    el('c6-center-val').textContent = '%' + Math.min(100, r.cov).toFixed(1);
+    el('c6-foot-left').innerHTML = 'GES Karşılama Oranı: <strong>%' + r.cov.toFixed(1) + '</strong>';
+    el('c6-foot-right').textContent = 'Pik Talep: ' + r.peakMw.toFixed(1) + ' MW';
+
+    // 5. DİRENÇLİLİK SEKMESİ: autoW, autoE, over, tl değerlerinden türetme
+    // - Emilim (Absorptive) = sarnıç (tl zirve & kapasite) / pik yağış (over taşkın aşımı)
+    var maxTl = Math.max.apply(null, r.tl.concat([0]));
+    var peakStorm = maxTl + r.over * 0.08 + 600;
+    var emilim = Math.round(Math.max(15, Math.min(98, (maxTl / peakStorm) * 100 + (p.greywater ? 8 : 0))));
+
+    // - Toparlanma (Restorative) = otonomi süresi (autoW su otonomisi + autoE elektrik otonomisi)
+    var wScore = Math.min(1, r.autoW / 50);
+    var eScore = Math.min(1, r.autoE / 24);
+    var toparlanma = Math.round(Math.max(12, Math.min(98, (wScore * 0.52 + eScore * 0.48) * 100)));
+
+    // - Uyum (Adaptive) = yeşil alan / kompost açık mı + gri su + yenilenebilir payı
+    var uyum = Math.round(Math.max(18, Math.min(98,
+      24 +
+      (p.compost ? 20 : 0) +
+      (p.greywater ? 14 : 0) +
+      (p.esco ? 8 : 0) +
+      Math.min(32, r.cov * 0.16 + r.wCov * 0.15)
+    )));
+
+    var bilesik = ((emilim + toparlanma + uyum) / 3).toFixed(1);
+
+    el('res-abs-val').textContent = '%' + emilim;
+    el('res-abs-ring').setAttribute('stroke-dasharray', emilim + ', 100');
+    el('res-abs-desc').textContent = 'Sarnıç (' + fmtInt(maxTl) + ' m³) / pik yağış sönümleme (Taşkın: ' + fmtInt(r.over) + ' m³).';
+
+    el('res-rest-val').textContent = '%' + toparlanma;
+    el('res-rest-ring').setAttribute('stroke-dasharray', toparlanma + ', 100');
+    el('res-rest-desc').textContent = 'Otonomi süresi: ' + r.autoW + ' gün su ve ' + r.autoE.toFixed(1) + ' saat elektrik yedeği.';
+
+    el('res-adap-val').textContent = '%' + uyum;
+    el('res-adap-ring').setAttribute('stroke-dasharray', uyum + ', 100');
+    el('res-adap-desc').textContent = 'Yeşil alan & biyo-kompost (' + (p.compost ? 'Açık' : 'Kapalı') + '), gri su (' + (p.greywater ? 'Açık' : 'Kapalı') + ').';
+
+    el('res-total-idx').textContent = bilesik + ' / 100';
+
+    // FMEA Tablosu dinamik kalıntı riskler
+    var resRisk1 = Math.max(8, Math.round(68 - r.autoW * 1.1));
+    var resRisk2 = Math.max(12, Math.round(58 - uyum * 0.38));
+    var resRisk3 = Math.max(8, Math.round(62 - emilim * 0.54));
+    var resRisk4 = Math.max(18, Math.round(65 - toparlanma * 0.33));
+    var resRisk5 = Math.max(6, Math.round(56 - r.autoE * 2.2));
+
+    el('fmea-mit-1').textContent = fmtInt(p.cistern) + ' m³ Sarnıç + ' + (p.greywater ? 'Gri Su Şebekesi' : 'Yalnızca Yağmur Hasadı');
+    el('fmea-res-1').textContent = '%' + resRisk1 + (resRisk1 <= 25 ? ' (Düşük)' : ' (Orta)');
+    el('fmea-res-2').textContent = '%' + resRisk2 + (resRisk2 <= 32 ? ' (Kontrollü)' : ' (İzleniyor)');
+    el('fmea-res-3').textContent = '%' + resRisk3 + (resRisk3 <= 25 ? ' (Düşük)' : ' (Orta)');
+    el('fmea-res-4').textContent = '%' + resRisk4 + ' (İzleniyor)';
+    el('fmea-mit-5').textContent = p.battery.toFixed(1) + ' MWh BESS batarya + kritik ada modu';
+    el('fmea-res-5').textContent = '%' + resRisk5 + (resRisk5 <= 18 ? ' (Minimal)' : ' (Orta)');
+
+    var riskDrop = Math.min(88, Math.max(15, Number(bilesik) * 0.85)).toFixed(1);
+    el('fmea-summary').innerHTML = 'Aktif Senaryo ile Genel Risk Düşüşü: <strong>%' + riskDrop + '</strong>';
+
+    // 6. Topoloji Düğümleri ve Altbilgi
+    el('node-1-meta').textContent = 'Otonomi: ' + r.autoW + ' Gün Rezerv';
+    el('node-2-desc').textContent = fmtInt(r.kwp) + ' kWp çatı panelleri ve ' + p.battery.toFixed(1) + ' MWh lityum-iyon mikroşebeke depolama.';
+    el('node-2-meta').textContent = 'Yaz Fazlası: %' + expPct + ' Şebeke';
+    el('node-3-meta').textContent = p.compost ? 'CH₄ Engelleme: %92 (Aktif)' : 'Kompost: Devre Dışı';
+    el('node-4-meta').textContent = 'Elektrik Otonomisi: ' + r.autoE.toFixed(1) + ' saat';
+    el('node-5-meta').textContent = 'Emilim Kapasitesi: %' + emilim;
+
+    var circIdx = Math.min(98, (r.wCov * 0.6 + r.cov * 0.45 + (p.compost ? 18 : 0) + (p.greywater ? 12 : 0))).toFixed(1);
+    el('circular-idx').textContent = 'Döngüsel Ekonomi İndeksi: %' + circIdx;
+    el('disc-pop').textContent = fmtInt(p.pop) + ' eşdeğer aktif kullanıcı/öğrenci';
+  }
+
+  function sync(mcIterations) {
+    var p = readStateFromDOM();
+    syncLabels(p);
+    var r = window.ESTU.run(p);
+    var m = window.ESTU.mc(p, mcIterations || 1500);
+    draw(r, m, p);
+    return { r: r, m: m, p: p };
+  }
+
+  // 5. Event Dinleyicileri Bağlama
+  function bindEvents() {
+    var sliderIds = ['sl-ges', 'sl-cistern', 'sl-battery', 'sl-pop', 'sl-roof', 'sl-tariff'];
+    sliderIds.forEach(function (id) {
+      var input = el(id);
+      if (!input) return;
+      input.addEventListener('input', function () {
+        sync(1200);
+      });
+      input.addEventListener('change', function () {
+        sync(5000);
+      });
+    });
+
+    var checkIds = ['chk-grey', 'chk-compost', 'chk-esco'];
+    checkIds.forEach(function (id) {
+      var chk = el(id);
+      if (!chk) return;
+      chk.addEventListener('change', function () {
+        sync(5000);
+      });
+    });
+
+    // Senaryo Önayar Butonları (A, B, C)
+    var presetBtns = document.querySelectorAll('.scenario-btn');
+    presetBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.getAttribute('data-preset');
+        var preset = window.ESTU.PRESETS[key];
+        if (!preset) return;
+
+        presetBtns.forEach(function (b) {
+          b.className = 'scenario-btn px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-white text-gray-700 shadow-sm cursor-pointer';
+        });
+        btn.className = 'scenario-btn px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-primary text-white shadow-sm cursor-pointer';
+
+        el('sl-ges').value = preset.ges;
+        el('sl-cistern').value = preset.cistern;
+        el('sl-battery').value = preset.battery;
+        el('sl-pop').value = preset.pop;
+        el('sl-roof').value = preset.roof;
+        el('sl-tariff').value = preset.tariff;
+        el('chk-grey').checked = Boolean(preset.greywater);
+        el('chk-compost').checked = Boolean(preset.compost);
+        el('chk-esco').checked = Boolean(preset.esco);
+
+        el('active-scenario-badge').textContent = 'Referans Senaryo ' + preset.code;
+        sync(5000);
+      });
+    });
+
+    // Hedef Ufku Butonları (2030, 2040, 2050)
+    var horizonBtns = document.querySelectorAll('.horizon-btn');
+    horizonBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        currentHorizon = Number(btn.getAttribute('data-horizon'));
+        horizonBtns.forEach(function (b) {
+          b.className = 'horizon-btn px-2 py-0.5 rounded text-[11px] font-medium text-gray-600 cursor-pointer';
+        });
+        btn.className = 'horizon-btn px-2 py-0.5 rounded text-[11px] font-bold bg-primary text-white cursor-pointer';
+        sync(5000);
+      });
+    });
+
+    // Modeli Yeniden Çalıştır Butonu (#btn-run)
+    var runBtn = el('btn-run');
+    if (runBtn) {
+      runBtn.addEventListener('click', function () {
+        runBtn.innerHTML = '<span class="icon-svg text-[20px] animate-spin">' + ICONS.autorenew + '</span><div class="flex flex-col text-left leading-tight"><span class="font-bold">Hesaplanıyor...</span><span class="text-[10px] text-emerald-100">5.000 İterasyon</span></div>';
+        setTimeout(function () {
+          var res = sync(5000);
+          runBtn.innerHTML = '<span class="icon-svg text-[20px]">' + ICONS.done_all + '</span><div class="flex flex-col text-left leading-tight"><span class="font-bold">Model Güncellendi</span><span class="text-[10px] text-emerald-100">P(NPV&gt;0): %' + res.m.pPos.toFixed(1) + '</span></div>';
+          setTimeout(function () {
+            runBtn.innerHTML = '<span class="icon-svg text-[20px]">' + ICONS.play_circle + '</span><div class="flex flex-col text-left leading-tight"><span class="font-bold">Modeli Yeniden Çalıştır</span><span class="text-[10px] text-emerald-100 font-normal">5.000 Monte Carlo İterasyonu</span></div>';
+          }, 1400);
+        }, 180);
+      });
+    }
+
+    // Üst Navigasyon Sekmeleri
+    var navTabs = document.querySelectorAll('.nav-tab');
+    navTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        navTabs.forEach(function (t) {
+          t.className = 'nav-tab px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-1.5';
+        });
+        tab.className = 'nav-tab px-3 py-1.5 rounded-md bg-gray-100 text-primary font-semibold flex items-center gap-1.5';
+        var targetId = tab.getAttribute('data-target');
+        var sec = el(targetId);
+        if (sec) {
+          sec.classList.add('section-highlight');
+          setTimeout(function () { sec.classList.remove('section-highlight'); }, 1200);
+        }
+      });
+    });
+
+    // Koyu / Açık Tema Düğmesi (#btn-theme)
+    var themeBtn = el('btn-theme');
+    function applyTheme(isDark) {
+      document.documentElement.classList.toggle('dark', isDark);
+      el('theme-icon').innerHTML = isDark ? ICONS.light_mode : ICONS.dark_mode;
+      el('theme-label').textContent = isDark ? 'Açık Tema' : 'Koyu Tema';
+      try { localStorage.setItem('estu-theme', isDark ? 'dark' : 'light'); } catch (e) {}
+    }
+
+    var savedTheme = null;
+    try { savedTheme = localStorage.getItem('estu-theme'); } catch (e) {}
+    if (savedTheme === 'dark') {
+      applyTheme(true);
+    }
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var nextDark = !document.documentElement.classList.contains('dark');
+        applyTheme(nextDark);
+      });
+    }
+  }
+
+  // Başlangıç yüklemesi
+  renderIcons();
+  bindEvents();
+  sync(5000);
+})();
+</script>
+</body>
+</html>
